@@ -2,7 +2,7 @@
 
 zookeeper_install_service: no
 
-zk_id: 0
+zookeeper_id: 0
 
 zookeeper_port: 2181
 
