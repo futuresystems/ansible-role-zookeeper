@@ -1,5 +1,20 @@
 ---
 
+zookeeper_username: zookeeper
+
+zookeeper_version: 3.4.8
+zookeeper_mirror: "http://www.gtlib.gatech.edu/pub/apache/zookeeper"
+zookeeper_versioned_name: "zookeeper-{{ zookeeper_version }}"
+zookeeper_url: "{{ zookeeper_mirror }}/{{ zookeeper_versioned_name }}/{{ zookeeper_versioned_name }}.tar.gz"
+
+zookeeper_checksums:
+  3.4.8: "f10a0b51f45c4f64c1fe69ef713abf9eb9571bc7385a82da892e83bb6c965e90"
+
+zookeeper_prefix: "/opt"
+zookeeper_conf_dir: "{{ zookeeper_prefix }}/zookeeper/conf"
+zookeeper_data_dir: "/var/lib/zookeeper"
+
+
 zookeeper_install_service: no
 
 zookeeper_id: 0

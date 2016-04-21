@@ -1,7 +1,8 @@
 ---
 
-- name: restart zookeeper
+- name: enable and restart zookeeper
   when: zookeeper_install_service
   service:
     name: zookeeper
     state: restarted
+    enabled: yes
