@@ -3,7 +3,7 @@
 tickTime=2000
 initLimit=10
 syncLimit=5
-dataDir=/var/lib/zookeeper
+dataDir={{ zookeeper_data_dir }}
 clientPort=2181
 
 {% for node in zookeeper_nodes %}

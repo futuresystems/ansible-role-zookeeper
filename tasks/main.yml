@@ -1,32 +1,43 @@
 ---
 
+- name: fetch zookeeper
+  get_url:
+    url: "{{ zookeeper_url }}"
+    dest: "{{ ansible_env.HOME }}/{{ zookeeper_url | basename }}"
+    checksum: "sha256:{{ zookeeper_checksums[zookeeper_version] }}"
 
-- name: install packages
-  apt:
-    name: "{{ item }}"
-    state: present
-  with_items:
-    - zookeeper
-    - zookeeper-bin
-  tags:
-    - zookeeper_install
-    - zookeeper
-    - install
+- name: extract zookeeper
+  unarchive:
+    copy: no
+    src: "{{ ansible_env.HOME }}/{{ zookeeper_url | basename }}"
+    dest: "{{ zookeeper_prefix }}"
 
-- name: install zookeeper service
-  when: zookeeper_install_service
-  apt:
-    name: zookeeperd
-    state: present
-  tags:
-    - zookeeper_install
-    - zookeeper
-    - install
+- name: symlink
+  file:
+    src: "{{ zookeeper_prefix }}/{{ zookeeper_versioned_name }}"
+    dest: "{{ zookeeper_prefix }}/zookeeper"
+    state: link
+
+
+- name: create zookeeper user
+  user:
+    name: "{{ zookeeper_username }}"
+    home: "{{ zookeeper_prefix }}/zookeeper"
+    createhome: no
+    
+
+- name: create the datadir
+  file:
+    path: "{{ zookeeper_data_dir }}"
+    state: directory
+    owner: "{{ zookeeper_username }}"
+    group: "{{ zookeeper_username }}"
+    recurse: yes
 
 - name: set instance id
   template:
     src: myid.j2
-    dest: /etc/zookeeper/conf/myid
+    dest: "{{ zookeeper_data_dir }}/myid"
   notify: restart zookeeper
   tags:
     - zookeeper_configure
@@ -37,8 +48,8 @@
 - name: configure
   template:
     src: zoo.cfg.j2
-    dest: /etc/zookeeper/conf/zoo.cfg
-  notify: restart zookeeper
+    dest: "{{ zookeeper_conf_dir }}/zoo.cfg"
+  notify: enable and restart zookeeper
   tags:
     - zookeeper_configure
     - zookeeper
