@@ -38,7 +38,7 @@
   template:
     src: myid.j2
     dest: "{{ zookeeper_data_dir }}/myid"
-  notify: restart zookeeper
+  notify: enable and restart zookeeper
   tags:
     - zookeeper_configure
     - zookeeper
